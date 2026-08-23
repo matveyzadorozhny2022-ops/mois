@@ -126,18 +126,18 @@ const defaults={
  settings:{shopName:'Mois Shop',managerUsername:'@mois_shop_manager',supportUsername:'@mois_shop_support',referralBase:'https://t.me/your_bot?start=ref_10001',discountPercent:5,language:'ru'},
  user:{id:'10001',name:'Покупатель',username:'@username',avatar:'',referrals:3},
  products:[
-  {id:'p1',name:'Голубой кардиган',price:89,category:'Одежда',description:'Мягкий кардиган свободного кроя. Подходит для повседневных образов.\n\nМатериал: хлопковая смесь.\nПосадка: свободная.\nУход: деликатная стирка.',sizes:['S','M','L'],stock:15,images:[svg('Кардиган','#cbb9ff','#f8f4ff'),svg('Кардиган · 2','#e4d9ff','#fff')]},
-  {id:'p2',name:'Сумка Mini',price:72,category:'Аксессуары',description:'Компактная сумка для телефона, ключей и небольших вещей. Регулируемый ремешок и минималистичная фурнитура.',sizes:['One size'],stock:9,images:[svg('Сумка','#d9c6ff','#fff'),svg('Сумка · 2','#c8b3f5','#fff')]},
-  {id:'p3',name:'Серьги Silver Drop',price:35,category:'Бижутерия',description:'Лёгкие серьги с лаконичной формой. Подойдут и на каждый день, и к вечернему образу.',sizes:['One size'],stock:24,images:[svg('Серьги','#eee8ff','#fff')]},
-  {id:'p4',name:'Белая футболка Base',price:59,category:'Одежда',description:'Базовая плотная футболка с аккуратной посадкой.\n\nМатериал: 100% хлопок.\nПлотность: средняя.',sizes:['XS','S','M','L','XL'],stock:30,images:[svg('Футболка','#fbf9ff','#e5d9ff')]},
-  {id:'p5',name:'Колье Sky',price:42,category:'Бижутерия',description:'Минималистичное колье с холодным оттенком металла. Регулируемая длина.',sizes:['One size'],stock:18,images:[svg('Колье','#d5c5ff','#fff')]},
-  {id:'p6',name:'Очки Minimal',price:49,category:'Аксессуары',description:'Лёгкая оправа в минималистичном стиле. Универсальная форма.',sizes:['One size'],stock:12,images:[svg('Очки','#e3d8ff','#fff')]}
+  {id:'p1',name:'Голубой кардиган',price:89,category:'Одежда',description:'Мягкий кардиган свободного кроя. Подходит для повседневных образов.\n\nМатериал: хлопковая смесь.\nПосадка: свободная.\nУход: деликатная стирка.',sizes:['S','M','L'],colors:['Лаванда','Небесный','Графит'],stock:15,images:['https://images.unsplash.com/photo-1553820691-26d5fb5b51e1?auto=format&fit=crop&w=900&q=76',svg('Кардиган · detail','#e4d9ff','#fff')]},
+  {id:'p2',name:'Сумка Mini',price:72,category:'Аксессуары',description:'Компактная сумка для телефона, ключей и небольших вещей. Регулируемый ремешок и минималистичная фурнитура.',sizes:['One size'],colors:['Лиловый','Чёрный','Молочный'],stock:9,images:['https://images.unsplash.com/photo-1605733513597-a8f8341084e6?auto=format&fit=crop&w=900&q=76',svg('Сумка · detail','#c8b3f5','#fff')]},
+  {id:'p3',name:'Серьги Silver Drop',price:35,category:'Бижутерия',description:'Лёгкие серьги с лаконичной формой. Подойдут и на каждый день, и к вечернему образу.',sizes:['One size'],colors:['Серебро'],stock:24,images:['https://images.unsplash.com/photo-1583218546897-82dbc5e555db?auto=format&fit=crop&w=900&q=76']},
+  {id:'p4',name:'Белая футболка Base',price:59,category:'Одежда',description:'Базовая плотная футболка с аккуратной посадкой.\n\nМатериал: 100% хлопок.\nПлотность: средняя.',sizes:['XS','S','M','L','XL'],colors:['Белый','Чёрный'],stock:30,images:['https://images.unsplash.com/photo-1777901513124-aba5eb12110d?auto=format&fit=crop&w=900&q=76']},
+  {id:'p5',name:'Колье Sky',price:42,category:'Бижутерия',description:'Минималистичное колье с холодным оттенком металла. Регулируемая длина.',sizes:['One size'],colors:['Серебро'],stock:18,images:['https://images.unsplash.com/photo-1603957138065-c6cd68886420?auto=format&fit=crop&w=900&q=76']},
+  {id:'p6',name:'Очки Minimal',price:49,category:'Аксессуары',description:'Лёгкая оправа в минималистичном стиле. Универсальная форма.',sizes:['One size'],colors:['Чёрный','Дымчатый'],stock:12,images:['https://images.unsplash.com/photo-1584036553516-bf83210aa16c?auto=format&fit=crop&w=900&q=76']}
  ],
  cart:[],orders:[]
 };
 let state=load(),currentCategory='__all',currentProductId=null,checkoutDraft=null,adminTab='dashboard';
 function clone(v){return JSON.parse(JSON.stringify(v))}
-function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.settings&&s.products){s.settings.language=s.settings.language||'ru';return s}}catch(e){}return clone(defaults)}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&s.settings&&s.products){s.settings.language=s.settings.language||'ru';const demo=new Map(defaults.products.map(p=>[p.id,p]));s.products=s.products.map(p=>{const d=demo.get(p.id);if(!d)return p;const onlyGenerated=!p.images?.length||p.images.every(x=>String(x).startsWith('data:image'));return {...p,colors:p.colors?.length?p.colors:d.colors,images:onlyGenerated?d.images:p.images}});return s}}catch(e){}return clone(defaults)}
 function save(render=true){localStorage.setItem(KEY,JSON.stringify(state));if(render)refresh()}
 function lang(){return state.settings.language==='be'?'be':'ru'} function t(k){return I18N[lang()][k]??I18N.ru[k]??k}
 function esc(s=''){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
@@ -179,9 +179,9 @@ function renderCategories(){
 function renderProducts(){
  const list=currentCategory==='__all'?state.products:state.products.filter(p=>p.category===currentCategory);
  $('#productsCount').textContent=list.length+' '+t('products');
- $('#productGrid').innerHTML=list.map((p,i)=>`<article class="product-card reveal-item" style="--reveal-delay:${Math.min(i,8)*55}ms" data-id="${esc(p.id)}"><div class="pic"><img loading="lazy" src="${esc(p.images?.[0]||svg(p.name))}" alt="${esc(p.name)}"></div><span class="badge">${esc(p.category||'')}</span><div class="body"><div class="name">${esc(p.name)}</div><div class="price">${money(p.price)}</div><div class="meta">${t('inStock')}: ${Number(p.stock||0)}</div></div><button class="mini-add" aria-label="${t('addCart')}" data-add="${esc(p.id)}">+</button></article>`).join('');
+ $('#productGrid').innerHTML=list.map((p,i)=>`<article class="product-card reveal-item" style="--reveal-delay:${Math.min(i%6,5)*90}ms" data-id="${esc(p.id)}"><div class="pic"><div class="image-skeleton"></div><img loading="${i<2?'eager':'lazy'}" decoding="async" fetchpriority="${i<2?'high':'low'}" src="${esc(p.images?.[0]||svg(p.name))}" alt="${esc(p.name)}" onload="this.parentElement.classList.add('loaded')"></div><span class="badge">${esc(p.category||'')}</span><div class="body"><div class="name">${esc(p.name)}</div><div class="price">${money(p.price)}</div><div class="meta">${t('inStock')}: ${Number(p.stock||0)}</div></div><button class="mini-add" aria-label="${t('addCart')}" data-add="${esc(p.id)}"><span>+</span></button></article>`).join('');
  $$('#productGrid .product-card').forEach(c=>c.onclick=e=>{if(e.target.closest('[data-add]'))return;openProduct(c.dataset.id)});
- $$('[data-add]').forEach(b=>b.onclick=e=>{e.stopPropagation();addToCart(b.dataset.add);toast(t('added'))});
+ $$('[data-add]').forEach(b=>b.onclick=e=>{e.stopPropagation();beginProductFlow(b.dataset.add,'cart')});
  requestAnimationFrame(observeProductCards);
 }
 function observeProductCards(){
@@ -191,9 +191,9 @@ function observeProductCards(){
  cards.forEach(c=>io.observe(c));
 }
 $$('.nav-btn').forEach(b=>b.onclick=()=>switchScreen(b.dataset.screen));
-function switchScreen(n){$$('.screen').forEach(s=>s.classList.toggle('active',s.id==='screen-'+n));$$('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===n));window.scrollTo({top:0,behavior:'instant'})}
+function switchScreen(n){const next=$('#screen-'+n);if(!next||next.classList.contains('active'))return;$$('.screen').forEach(s=>s.classList.remove('active','page-enter'));next.classList.add('active');requestAnimationFrame(()=>next.classList.add('page-enter'));$$('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.screen===n));window.scrollTo(0,0)}
 
-function openProduct(id){const p=byId(id);if(!p)return;currentProductId=id;$('#detailGallery').innerHTML=(p.images?.length?p.images:[svg(p.name)]).map(x=>`<img src="${esc(x)}">`).join('');$('#detailPrice').textContent=money(p.price);$('#detailName').textContent=p.name;$('#detailCategory').textContent=(p.category||'')+' · '+t('inStock')+' '+Number(p.stock||0);$('#detailDesc').textContent=p.description||'';$('#productView').classList.remove('hidden');document.body.style.overflow='hidden'}
+function openProduct(id){const p=byId(id);if(!p)return;currentProductId=id;$('#detailGallery').innerHTML=(p.images?.length?p.images:[svg(p.name)]).map((x,i)=>`<img src="${esc(x)}" decoding="async" loading="${i?'lazy':'eager'}">`).join('');$('#detailPrice').textContent=money(p.price);$('#detailName').textContent=p.name;$('#detailCategory').textContent=(p.category||'')+' · '+t('inStock')+' '+Number(p.stock||0);$('#detailDesc').textContent=p.description||'';$('#productView').classList.remove('hidden');document.body.style.overflow='hidden'}
 window.closeProduct=()=>{$('#productView').classList.add('hidden');document.body.style.overflow=''};
 window.addCurrentToCart=()=>{if(currentProductId){addToCart(currentProductId);toast(t('added'))}};
 window.buyCurrentNow=()=>{if(currentProductId)startCheckout(currentProductId,false)};
@@ -261,7 +261,7 @@ window.confirmCheckout=()=>{
  modal(`<div style="text-align:center;padding:9px 3px 4px"><div style="width:70px;height:70px;border-radius:23px;background:#e4f8ef;color:#27845f;display:grid;place-items:center;font-size:33px;margin:0 auto 13px">✓</div><h3>${t('orderDone')}</h3><p class="muted" style="font-size:13px;line-height:1.55">${esc(order.id)}<br>${t('orderDoneText')}</p><div class="panel" style="font-size:17px;font-weight:850;color:#6f4bb6">${esc(state.settings.managerUsername)}</div><button class="primary-btn" style="width:100%;margin-top:13px" onclick="closeModal();openChat()">${t('writeManager')}</button><button class="ghost-btn" style="width:100%;margin-top:8px" onclick="closeModal()">${t('close')}</button></div>`);
 };
 
-window.openOrders=()=>modal(`<div class="close-row"><div><h3>${t('myOrders')}</h3><div class="small muted">${state.orders.length} ${t('orders')}</div></div><button class="icon-btn" onclick="closeModal()">×</button></div><div class="stack" style="margin-top:15px">${state.orders.length?state.orders.map(o=>`<div class="order-card"><div class="row space"><b>${esc(o.id)}</b><span class="info-pill">${esc(o.status)}</span></div><div class="small muted" style="margin-top:5px">${new Date(o.createdAt).toLocaleString(lang()==='be'?'be-BY':'ru-RU')}</div><div class="divider"></div>${o.items.map(i=>`<div class="small">${esc(i.name)} · ${esc(i.size||'')} · ×${i.qty}</div>`).join('')}<div class="small muted" style="margin-top:8px">${esc(o.delivery)}${o.postalCity?' · '+esc(o.postalCity):''}</div><div class="row space" style="margin-top:8px"><span class="small muted">${o.deliveryKind==='post'?t('postalTariff'):''}</span><b>${money(o.total)}</b></div></div>`).join(''):`<div class="empty">${t('ordersEmpty')}</div>`}</div>`);
+window.openOrders=()=>modal(`<div class="close-row"><div><h3>${t('myOrders')}</h3><div class="small muted">${state.orders.length} ${t('orders')}</div></div><button class="icon-btn" onclick="closeModal()">×</button></div><div class="stack" style="margin-top:15px">${state.orders.length?state.orders.map(o=>`<div class="order-card"><div class="row space"><b>${esc(o.id)}</b><span class="info-pill">${esc(o.status)}</span></div><div class="small muted" style="margin-top:5px">${new Date(o.createdAt).toLocaleString(lang()==='be'?'be-BY':'ru-RU')}</div><div class="divider"></div>${o.items.map(i=>`<div class="small">${esc(i.name)} · ${esc([i.color,i.size].filter(Boolean).join(' · '))} · ×${i.qty}</div>`).join('')}<div class="small muted" style="margin-top:8px">${esc(o.delivery)}${o.postalCity?' · '+esc(o.postalCity):''}${o.paymentLabel?' · '+esc(o.paymentLabel):''}</div><div class="row space" style="margin-top:8px"><span class="small muted">${o.deliveryKind==='post'?t('postalTariff'):''}</span><b>${money(o.total)}</b></div></div>`).join(''):`<div class="empty">${t('ordersEmpty')}</div>`}</div>`);
 
 function userLink(u){return 'https://t.me/'+encodeURIComponent(String(u||'').replace(/^@/,''))}
 window.openSupport=()=>window.open(userLink(state.settings.supportUsername),'_blank');window.openChat=()=>window.open(userLink(state.settings.managerUsername),'_blank');
@@ -285,7 +285,94 @@ window.editProduct=(id='')=>{const p=id?byId(id):null;modal(`<div class="close-r
 window.saveProduct=(id='')=>{const name=$('#apName').value.trim();if(!name)return;const urls=$('#apImages').value.split('\n').map(x=>x.trim()).filter(Boolean),data={id:id||'p'+Date.now(),name,price:Number($('#apPrice').value||0),category:$('#apCategory').value.trim()||'Другое',stock:Math.max(0,Number($('#apStock').value||0)),sizes:$('#apSizes').value.split(',').map(x=>x.trim()).filter(Boolean),description:$('#apDesc').value.trim(),images:urls.length?urls:[svg(name)]};if(id){const i=state.products.findIndex(x=>x.id===id);if(i>=0){if(!urls.length&&state.products[i].images?.length)data.images=state.products[i].images;state.products[i]=data}}else state.products.unshift(data);save();closeModal();adminTab='products';renderAdmin();toast(t('productSaved'))};
 window.deleteProduct=id=>{state.products=state.products.filter(x=>x.id!==id);state.cart=state.cart.filter(x=>x.productId!==id);save();closeModal();renderAdmin();toast(t('productDeleted'))};
 
+
+Object.assign(I18N.ru,{
+ color:'Цвет',storyVariant:'Выбери свой вариант',storyVariantSub:'Сначала настроим вещь под тебя.',storyDelivery:'Как доставить?',storyDeliverySub:'Выбери удобный способ — без длинных форм.',storyPayment:'Как оплатить?',storyPaymentSub:'Оплата только после подтверждения заказа.',storyReview:'Всё готово',storyReviewSub:'Проверь детали перед последним действием.',next:'Продолжить',back:'Назад',addConfigured:'Добавить в корзину',confirmOrder:'Подтвердить заказ',metroShort:'Минск · к метро',postShort:'Белпочта · по Беларуси',cash:'Наличными при получении',card:'Картой при получении',cod:'Наложенный платёж',payment:'Оплата',variantSaved:'Вариант сохранён',cartHint:'Доставка и оплата сохранятся с товаром — их можно изменить при оформлении.',chooseStation:'Станция метро',chooseCity:'Город / населённый пункт',standard:'Стандарт',reviewItems:'Твои товары',storyAdded:'Товар настроен и добавлен',promoStory:'Промокод',commentStory:'Комментарий менеджеру'
+});
+Object.assign(I18N.be,{
+ color:'Колер',storyVariant:'Абяры свой варыянт',storyVariantSub:'Спачатку наладзім рэч пад цябе.',storyDelivery:'Як даставіць?',storyDeliverySub:'Абяры зручны спосаб — без доўгіх формаў.',storyPayment:'Як аплаціць?',storyPaymentSub:'Аплата толькі пасля пацверджання заказу.',storyReview:'Усё гатова',storyReviewSub:'Правер дэталі перад апошнім дзеяннем.',next:'Працягнуць',back:'Назад',addConfigured:'Дадаць у кошык',confirmOrder:'Пацвердзіць заказ',metroShort:'Мінск · да метро',postShort:'Белпошта · па Беларусі',cash:'Наяўнымі пры атрыманні',card:'Картай пры атрыманні',cod:'Накладзены плацёж',payment:'Аплата',variantSaved:'Варыянт захаваны',cartHint:'Дастаўка і аплата захаваюцца з таварам — іх можна змяніць пры афармленні.',chooseStation:'Станцыя метро',chooseCity:'Горад / населены пункт',standard:'Стандарт',reviewItems:'Твае тавары',storyAdded:'Тавар наладжаны і дададзены',promoStory:'Прамакод',commentStory:'Каментар менеджару'
+});
+
+const COLOR_HEX={'Лаванда':'#a98be8','Небесный':'#a9c8ff','Графит':'#39333f','Лиловый':'#c0a6ed','Чёрный':'#18151c','Молочный':'#f0ece7','Серебро':'#c7c7cf','Белый':'#fafafa','Дымчатый':'#77717e','Стандарт':'#a98be8'};
+let storyFlow=null;
+function productColors(p){return p?.colors?.length?p.colors:[t('standard')]}
+function defaultDeliveryId(kind='metro'){const opts=deliveryOptions().filter(o=>o.kind===kind);return opts[0]?.id||deliveryOptions()[0]?.id||''}
+function beginProductFlow(id,mode='cart'){
+ const p=byId(id);if(!p)return;
+ if(!$('#productView').classList.contains('hidden'))closeProduct();
+ if($('#modalRoot').innerHTML)closeModal();
+ storyFlow={mode,fromCart:false,step:0,items:[{productId:id,qty:1,size:p.sizes?.[0]||'One size',color:productColors(p)[0]}],deliveryType:'metro',deliveryId:defaultDeliveryId('metro'),payment:'cash',discount:0,comment:'',postalCity:''};
+ renderStory();
+}
+function beginCartStory(){
+ if(!state.cart.length){toast(t('emptyCart'));return}
+ const first=state.cart[0];
+ storyFlow={mode:'checkout',fromCart:true,step:0,items:state.cart.map(x=>{const p=byId(x.productId);return {productId:x.productId,qty:Math.max(1,Number(x.qty||1)),size:x.size||p?.sizes?.[0]||'One size',color:x.color||productColors(p)[0]}}).filter(x=>byId(x.productId)),deliveryType:first.deliveryType||'metro',deliveryId:first.deliveryId||defaultDeliveryId(first.deliveryType||'metro'),payment:first.payment||'cash',discount:0,comment:'',postalCity:first.postalCity||''};
+ renderStory();
+}
+function storyImage(){const p=byId(storyFlow?.items?.[0]?.productId);return p?.images?.[0]||svg(p?.name||'Mois Shop')}
+function storyTitle(){return [t('storyVariant'),t('storyDelivery'),t('storyPayment'),t('storyReview')][storyFlow.step]}
+function storySub(){return [t('storyVariantSub'),t('storyDeliverySub'),t('storyPaymentSub'),t('storyReviewSub')][storyFlow.step]}
+function storyProgress(){return Array.from({length:4},(_,i)=>`<span class="story-progress-seg ${i<storyFlow.step?'done':i===storyFlow.step?'active':''}"><i></i></span>`).join('')}
+function storyArt(step){
+ if(step===0)return `<div class="story-media"><img src="${esc(storyImage())}" alt="" decoding="async"><div class="story-media-shade"></div><div class="story-media-tag">MOIS SELECT</div></div>`;
+ const paths=step===1?'<path d="M5 18h14M7 18V9l5-4 5 4v9M9 12h6"/><path d="M4 6h4M16 6h4"/>':step===2?'<rect x="4" y="6" width="16" height="12" rx="3"/><path d="M4 10h16M8 15h3"/>':'<path d="m5 12 4 4L19 6"/><circle cx="12" cy="12" r="9"/>';
+ return `<div class="story-illustration story-illustration-${step}"><div class="story-illus-orb"></div><svg viewBox="0 0 24 24">${paths}</svg><span>${step===1?'MOIS DELIVERY':step===2?'MOIS PAY':'READY'}</span></div>`;
+}
+function renderStory(){
+ if(!storyFlow)return;
+ const root=$('#storyRoot');document.body.style.overflow='hidden';
+ root.innerHTML=`<div class="story-overlay"><div class="story-shell">${storyArt(storyFlow.step)}<div class="story-top"><div class="story-progress">${storyProgress()}</div><div class="story-top-actions"><button class="story-round ${storyFlow.step===0?'is-hidden':''}" onclick="storyBack()" aria-label="${t('back')}">${icon('back',20)}</button><button class="story-round" onclick="closeStory()" aria-label="${t('close')}">${icon('close',20)}</button></div></div><div class="story-sheet"><div class="story-step-copy"><span>0${storyFlow.step+1} / 04</span><h2>${storyTitle()}</h2><p>${storySub()}</p></div><div class="story-step-body">${storyStepBody()}</div><div class="story-actions"><button class="story-primary" onclick="storyNext()">${storyFlow.step===3?(storyFlow.mode==='cart'?t('addConfigured'):t('confirmOrder')):t('next')}<span>${icon('arrow',18)}</span></button></div></div></div></div>`;
+}
+function storyStepBody(){
+ if(storyFlow.step===0)return storyVariantBody();
+ if(storyFlow.step===1)return storyDeliveryBody();
+ if(storyFlow.step===2)return storyPaymentBody();
+ return storyReviewBody();
+}
+function storyVariantBody(){return `<div class="story-variant-list">${storyFlow.items.map((it,i)=>{const p=byId(it.productId),colors=productColors(p),sizes=p?.sizes?.length?p.sizes:['One size'];return `<div class="story-variant-card"><div class="story-product-head"><img src="${esc(p.images?.[0]||svg(p.name))}" alt="" decoding="async"><div><b>${esc(p.name)}</b><span>${money(p.price)}</span></div><div class="story-qty"><button onclick="storyQty(${i},-1)">−</button><b>${it.qty}</b><button onclick="storyQty(${i},1)">+</button></div></div><label class="story-label">${t('color')}</label><div class="choice-row colors">${colors.map(c=>`<button class="choice-chip ${c===it.color?'active':''}" onclick="storyColor(${i},'${esc(c)}')"><i style="--swatch:${COLOR_HEX[c]||'#a98be8'}"></i>${esc(c)}</button>`).join('')}</div><label class="story-label">${t('size')}</label><div class="choice-row">${sizes.map(s=>`<button class="choice-chip ${s===it.size?'active':''}" onclick="storySize(${i},'${esc(s)}')">${esc(s)}</button>`).join('')}</div></div>`}).join('')}</div>`}
+function storyDeliveryBody(){const opts=deliveryOptions(),metro=opts.filter(o=>o.kind==='metro'),post=opts.filter(o=>o.kind==='post');return `<div class="story-option-stack"><button class="story-option ${storyFlow.deliveryType==='metro'?'active':''}" onclick="storyDeliveryType('metro')"><span class="story-option-icon">${icon('home',23)}</span><span><b>${t('metroShort')}</b><small>5 BYN · ${t('minskText')}</small></span><i></i></button><button class="story-option ${storyFlow.deliveryType==='post'?'active':''}" onclick="storyDeliveryType('post')"><span class="story-option-icon">${icon('box',23)}</span><span><b>${t('postShort')}</b><small>${t('postalCOD')} · ${t('postText')}</small></span><i></i></button></div>${storyFlow.deliveryType==='metro'?`<div class="story-field"><label>${t('chooseStation')}</label><select onchange="storyDeliveryId(this.value)">${metro.map(o=>`<option value="${o.id}" ${o.id===storyFlow.deliveryId?'selected':''}>${esc(o.label)}</option>`).join('')}</select></div>`:`<div class="story-field"><label>${t('chooseCity')}</label><select onchange="storyDeliveryId(this.value)">${post.map(o=>`<option value="${o.id}" ${o.id===storyFlow.deliveryId?'selected':''}>${esc(o.label.replace(t('post')+' · ',''))}</option>`).join('')}</select><input value="${esc(storyFlow.postalCity||'')}" oninput="storyFlow.postalCity=this.value" placeholder="${t('postalCityPh')}"></div>`}`}
+function paymentChoices(){return storyFlow.deliveryType==='post'?[{id:'cod',label:t('cod'),sub:t('postalCOD')}]:[{id:'cash',label:t('cash'),sub:'После примерки / передачи'},{id:'card',label:t('card'),sub:'После подтверждения менеджером'}]}
+function storyPaymentBody(){return `<div class="story-option-stack payment-options">${paymentChoices().map((o,i)=>`<button class="story-option ${storyFlow.payment===o.id?'active':''}" onclick="storyPayment('${o.id}')"><span class="story-option-icon">${icon(i?'spark':'bag',23)}</span><span><b>${esc(o.label)}</b><small>${esc(o.sub)}</small></span><i></i></button>`).join('')}</div><div class="story-security"><span>${icon('spark',18)}</span><p>${t('checkoutSub')}</p></div>`}
+function storySubtotal(){return storyFlow.items.reduce((s,it)=>{const p=byId(it.productId);return s+(p?p.price*it.qty:0)},0)}
+function storyReviewBody(){const sub=storySubtotal(),disc=sub*(storyFlow.discount||0)/100,delivery=storyFlow.deliveryType==='metro'?5:0,total=sub-disc+delivery,opt=deliveryOptions().find(o=>o.id===storyFlow.deliveryId);return `<div class="story-review"><div class="story-review-items"><label class="story-label">${t('reviewItems')}</label>${storyFlow.items.map(it=>{const p=byId(it.productId);return `<div class="review-item"><img src="${esc(p.images?.[0]||svg(p.name))}" alt=""><div><b>${esc(p.name)}</b><span>${esc(it.color||'')} · ${esc(it.size||'')} · ×${it.qty}</span></div><strong>${money(p.price*it.qty)}</strong></div>`}).join('')}</div><div class="review-delivery"><span>${icon('box',19)}</span><div><b>${esc(opt?.label||'')}</b><small>${storyFlow.deliveryType==='metro'?'5 BYN':t('postalTariff')} · ${esc(paymentChoices().find(x=>x.id===storyFlow.payment)?.label||'')}</small></div></div><div class="story-field"><label>${t('promoStory')}</label><div class="story-inline"><input id="storyPromo" placeholder="MOIS5"><button onclick="storyPromo()">${t('apply')}</button></div></div><div class="story-field"><label>${t('commentStory')}</label><textarea oninput="storyFlow.comment=this.value" placeholder="${t('commentPh')}">${esc(storyFlow.comment||'')}</textarea></div><div class="story-total"><span>${t('total')}</span><b>${money(total)}</b></div>${storyFlow.mode==='cart'?`<div class="story-hint">${t('cartHint')}</div>`:''}</div>`}
+window.storyQty=(i,d)=>{const x=storyFlow.items[i];if(!x)return;x.qty=Math.max(1,x.qty+d);renderStory()};
+window.storyColor=(i,v)=>{if(storyFlow.items[i]){storyFlow.items[i].color=v;renderStory()}};
+window.storySize=(i,v)=>{if(storyFlow.items[i]){storyFlow.items[i].size=v;renderStory()}};
+window.storyDeliveryType=kind=>{storyFlow.deliveryType=kind;storyFlow.deliveryId=defaultDeliveryId(kind);storyFlow.payment=kind==='post'?'cod':'cash';renderStory()};
+window.storyDeliveryId=v=>{storyFlow.deliveryId=v};
+window.storyPayment=v=>{storyFlow.payment=v;renderStory()};
+window.storyPromo=()=>{const c=($('#storyPromo')?.value||'').trim().toUpperCase();storyFlow.discount=c==='MOIS5'?5:0;toast(storyFlow.discount?t('promoOk'):t('promoBad'));renderStory()};
+window.storyBack=()=>{if(storyFlow?.step>0){storyFlow.step--;renderStory()}};
+window.storyNext=()=>{if(!storyFlow)return;if(storyFlow.step<3){storyFlow.step++;if(storyFlow.step===2&&storyFlow.deliveryType==='post')storyFlow.payment='cod';renderStory();return}commitStory()};
+window.closeStory=()=>{storyFlow=null;$('#storyRoot').innerHTML='';if($('#productView').classList.contains('hidden')&&$('#adminScreen').classList.contains('hidden')&&!$('#modalRoot').innerHTML)document.body.style.overflow=''};
+function commitStory(){
+ if(storyFlow.mode==='cart'){
+  storyFlow.items.forEach(it=>{const same=state.cart.find(x=>x.productId===it.productId&&x.size===it.size&&x.color===it.color);if(same)same.qty+=it.qty;else state.cart.push({...it,deliveryType:storyFlow.deliveryType,deliveryId:storyFlow.deliveryId,payment:storyFlow.payment,postalCity:storyFlow.postalCity||''})});
+  save(false);closeStory();toast(t('storyAdded'));return;
+ }
+ const opt=deliveryOptions().find(o=>o.id===storyFlow.deliveryId);if(!opt)return;
+ const sub=storySubtotal(),disc=sub*(storyFlow.discount||0)/100,delivery=storyFlow.deliveryType==='metro'?5:0,total=sub-disc+delivery;
+ const order={id:'MS-'+Date.now().toString().slice(-8),createdAt:new Date().toISOString(),status:t('orderStatus'),items:storyFlow.items.map(it=>{const p=byId(it.productId);return {productId:it.productId,name:p.name,qty:it.qty,size:it.size,color:it.color,price:p.price}}),delivery:opt.label,deliveryKind:storyFlow.deliveryType,deliveryPrice:storyFlow.deliveryType==='metro'?5:null,postalCity:storyFlow.postalCity||'',payment:storyFlow.payment,paymentLabel:paymentChoices().find(x=>x.id===storyFlow.payment)?.label||storyFlow.payment,promo:storyFlow.discount?'MOIS5':'',discount:storyFlow.discount||0,comment:storyFlow.comment||'',total};
+ state.orders.unshift(order);if(storyFlow.fromCart)state.cart=[];save(false);closeStory();refresh();
+ modal(`<div class="success-wrap"><div class="success-check">${icon('spark',30)}</div><h3>${t('orderDone')}</h3><p>${esc(order.id)}<br>${t('orderDoneText')}</p><div class="success-manager">${esc(state.settings.managerUsername)}</div><button class="primary-btn" style="width:100%;margin-top:14px" onclick="closeModal();openChat()">${t('writeManager')}</button><button class="ghost-btn" style="width:100%;margin-top:9px" onclick="closeModal()">${t('close')}</button></div>`);
+}
+function addToCart(id){beginProductFlow(id,'cart')}
+window.addCurrentToCart=()=>{if(currentProductId)beginProductFlow(currentProductId,'cart')};
+window.buyCurrentNow=()=>{if(currentProductId)beginProductFlow(currentProductId,'checkout')};
+window.startCheckout=(productId,fromCart=false)=>{if($('#modalRoot').innerHTML)closeModal();fromCart?beginCartStory():beginProductFlow(productId,'checkout')};
+
+// Cart rebuilt to surface selected variant without re-rendering the whole app.
+window.openCart=()=>{
+ const rows=state.cart.map((x,i)=>({x,i,p:byId(x.productId)})).filter(z=>z.p);
+ modal(`<div class="close-row"><div><h3>${t('cart')}</h3><div class="small muted">${cartCount()} ${t('items')}</div></div><button class="icon-btn" onclick="closeModal()">×</button></div><div class="stack cart-stack">${rows.length?rows.map(({x,i,p})=>`<div class="cart-item"><img src="${esc(p.images?.[0]||svg(p.name))}" decoding="async"><div class="ci-main"><b>${esc(p.name)}</b><div class="cart-variant">${esc(x.color||productColors(p)[0])} · ${esc(x.size||p.sizes?.[0]||'One size')}</div><div class="small muted">${money(p.price)}</div><div class="qty"><button onclick="cartQty(${i},-1)">−</button><b>${x.qty}</b><button onclick="cartQty(${i},1)">+</button></div></div><button class="remove-btn" onclick="removeCart(${i})">×</button></div>`).join(''):`<div class="empty">${t('emptyCart')}</div>`}</div>${rows.length?`<div class="panel cart-total-panel"><div class="row space"><b>${t('total')}</b><b>${money(cartTotal())}</b></div><button class="primary-btn" style="width:100%;margin-top:12px" onclick="startCheckout(null,true)">${t('checkoutCart')}</button></div>`:''}`);
+};
+
+
+window.cartQty=(i,d)=>{if(!state.cart[i])return;state.cart[i].qty=Math.max(1,Number(state.cart[i].qty||1)+d);save(false);openCart()};
+window.removeCart=i=>{state.cart.splice(i,1);save(false);openCart()};
+
 try{const tg=window.Telegram?.WebApp;if(tg){tg.ready();tg.expand();const u=tg.initDataUnsafe?.user;if(u){state.user.id=String(u.id||state.user.id);state.user.name=[u.first_name,u.last_name].filter(Boolean).join(' ')||state.user.name;state.user.username=u.username?'@'+u.username:state.user.username;state.user.avatar=u.photo_url||state.user.avatar;save(false)}}}catch(e){}
 refresh();
-setTimeout(()=>$('#splash').classList.add('leave'),2600);setTimeout(()=>$('#splash')?.remove(),3350);
+setTimeout(()=>$('#splash')?.classList.add('leave'),850);setTimeout(()=>$('#splash')?.remove(),1250);
 })();
