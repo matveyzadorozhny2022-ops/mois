@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#8b66d9">
 <meta name="color-scheme" content="light">
 <title>Mois Shop</title>
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
 <link rel="stylesheet" href="app.css">
 </head>
 <body>
@@ -30,23 +31,18 @@
     <span class="eyebrow">MOIS / 26</span>
   </div>
   <div class="hero" role="img" aria-label="Mois Shop banner">
-    <div class="hero-orb hero-orb-a"></div><div class="hero-orb hero-orb-b"></div>
-    <svg class="hero-art" viewBox="0 0 340 280" aria-hidden="true">
-      <defs><linearGradient id="dress" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d7c3ff"/><stop offset="1" stop-color="#8d65cf"/></linearGradient></defs>
-      <path d="M212 40c19 7 30 22 31 44 1 17-5 29-17 38l24 76c5 16-7 31-24 31h-79c-17 0-29-16-23-32l27-74c-11-9-17-22-16-38 1-23 13-39 34-46l13 22 11-22 19 1Z" fill="url(#dress)" opacity=".88"/>
-      <path d="M171 67c11 9 32 9 43 0" fill="none" stroke="#fff" stroke-opacity=".72" stroke-width="3" stroke-linecap="round"/>
-      <path d="M145 126c29 20 68 19 93-2M133 159c35 24 84 23 111-2" fill="none" stroke="#fff" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="188" cy="32" r="19" fill="#f1e8ff" opacity=".9"/><path d="M176 30c5-17 26-17 31 0-8-4-23-4-31 0Z" fill="#7f5bbf"/>
-      <path d="M107 64c-19 18-25 44-17 70M92 172c-10 12-13 27-8 42" fill="none" stroke="#fff" stroke-opacity=".45" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="91" cy="146" r="7" fill="#fff" opacity=".45"/>
-    </svg>
+    <img class="hero-photo" src="https://images.unsplash.com/photo-1648322032204-eae8c94abc3e?auto=format&fit=crop&w=1200&q=82" alt="Mois Shop fashion collection" loading="eager" fetchpriority="high" decoding="async">
+    <div class="hero-wash"></div>
+    <div class="hero-ribbon"><span>MOIS</span><i></i><span>NEW DROP</span></div>
     <div class="hero-content">
       <div class="hero-kicker" id="heroKicker"></div>
       <h2 id="heroTitle"></h2>
       <p id="heroText"></p>
       <span class="hero-more" id="heroMore"></span>
     </div>
-    <div class="hero-sign">MS</div>
+    <div class="hero-float hero-float-a"><span>01</span><b>Curated<br>in Minsk</b></div>
+    <div class="hero-float hero-float-b"><span>MS</span><b>Everyday<br>edit</b></div>
+    <svg class="hero-line" viewBox="0 0 180 70" aria-hidden="true"><path d="M4 62C42 6 106 3 176 44"/><circle cx="176" cy="44" r="3"/></svg>
   </div>
   <div class="chips" id="categoryChips"></div>
   <div class="section-title"><div><span class="section-kicker">SELECTED FOR YOU</span><h3 id="forYouText"></h3></div><span class="small muted" id="productsCount"></span></div>
@@ -99,6 +95,7 @@
  </div>
 </div>
 
+<div id="storyRoot"></div>
 <div id="modalRoot"></div>
 <div id="adminScreen" class="hidden"><div class="admin-wrap"><div class="admin-header"><button class="icon-btn" onclick="closeAdmin()"><svg viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg></button><div><div class="small muted" id="adminOnly"></div><h1 id="adminTitle"></h1></div></div><div class="admin-tabs" id="adminTabs"><button class="admin-tab active" data-admin="dashboard" id="tabOverview"></button><button class="admin-tab" data-admin="products" id="tabProducts"></button><button class="admin-tab" data-admin="orders" id="tabOrders"></button><button class="admin-tab" data-admin="settings" id="tabSettings"></button></div><div id="adminContent"></div></div></div>
 <div id="toast" class="toast"></div>
